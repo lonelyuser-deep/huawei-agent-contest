@@ -1,0 +1,11 @@
+{
+  "color": [
+    { "name": "start_window_background", "value": "#FFFFFF" },
+    { "name": "primary_color", "value": "#4A90D9" },
+    { "name": "pending_color", "value": "#4A90D9" },
+    { "name": "picked_color", "value": "#52C41A" },
+    { "name": "delete_color", "value": "#FF4D4F" },
+    { "name": "bg_color", "value": "#F5F6FA" },
+    { "name": "card_bg", "value": "#FFFFFF" }
+  ]
+}

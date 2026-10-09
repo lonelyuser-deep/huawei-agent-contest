@@ -1,0 +1,11 @@
+{
+  "string": [
+    { "name": "module_desc", "value": "校园快递助手模块" },
+    { "name": "app_name", "value": "校园快递助手" },
+    { "name": "EntryAbility_desc", "value": "校园快递助手入口" },
+    { "name": "EntryAbility_label", "value": "校园快递助手" },
+    { "name": "notification_reason", "value": "用于监听快递通知自动录入取件码" },
+    { "name": "location_reason", "value": "用于地图导航到快递驿站" },
+    { "name": "calendar_reason", "value": "用于设置取件提醒日程" }
+  ]
+}
