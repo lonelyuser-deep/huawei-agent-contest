@@ -48,25 +48,19 @@ function togglePick() {
 function onDelete() {
   if (confirm('确认删除？删除后不可恢复')) {
     deleteRecord(route.params.id as string)
-    router.back()
+    router.push('/')
   }
 }
 
-onMounted(() => {
-  record.value = getById(route.params.id as string)
-})
+onMounted(() => { record.value = getById(route.params.id as string) })
 </script>
 
 <style scoped>
-.detail-page { padding: 16px; }
-.status-badge {
-  text-align: center; font-size: 18px; font-weight: 600; padding: 12px;
-  border-radius: 8px; margin-bottom: 16px;
-}
-.status-badge.pending { background: #e8f2fe; color: var(--primary); }
+.status-badge { text-align: center; font-size: 18px; font-weight: 600; padding: 12px; border-radius: 8px; margin-bottom: 16px; }
+.status-badge.pending { background: var(--primary-pale); color: var(--primary); }
 .status-badge.picked { background: #f0fff0; color: var(--picked); }
-.detail-card { background: #fff; border-radius: 12px; padding: 16px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-.row { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid #f5f5f5; }
+.detail-card { background: var(--card-bg); border-radius: 12px; padding: 16px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+.row { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--border); }
 .row:last-child { border-bottom: none; }
 .label { font-size: 14px; color: var(--text-hint); }
 .value { font-size: 16px; font-weight: 500; }

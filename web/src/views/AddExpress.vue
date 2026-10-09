@@ -1,24 +1,16 @@
 <template>
   <div class="add-page">
-    <h2 class="section-title">🤖 智能录入</h2>
+    <h2 class="page-title">➕ 添加快递</h2>
+
+    <h3 class="section-title">🤖 智能录入</h3>
     <div v-if="clipboardHint" class="clipboard-hint">{{ clipboardHint }}</div>
-    <textarea
-      v-model="rawInput"
-      class="smart-input"
-      placeholder="粘贴快递通知，或输入如：菜鸟驿站取件码1-3-201圆通尾号1234"
-    ></textarea>
+    <textarea v-model="rawInput" class="smart-input" placeholder="粘贴快递通知，或输入如：菜鸟驿站取件码1-3-201圆通尾号1234"></textarea>
     <button class="primary" @click="parseText">智能识别</button>
 
-    <h2 class="section-title" style="margin-top: 20px">📝 手动填写</h2>
+    <h3 class="section-title" style="margin-top: 24px">📝 手动填写</h3>
     <div class="form">
-      <div class="form-item">
-        <label>驿站名称</label>
-        <input v-model="form.station" placeholder="如：菜鸟驿站" />
-      </div>
-      <div class="form-item">
-        <label>取件码</label>
-        <input v-model="form.code" placeholder="如：1-3-201" />
-      </div>
+      <div class="form-item"><label>驿站名称</label><input v-model="form.station" placeholder="如：菜鸟驿站" /></div>
+      <div class="form-item"><label>取件码</label><input v-model="form.code" placeholder="如：1-3-201" /></div>
       <div class="form-item">
         <label>快递公司</label>
         <select v-model="form.courier">
@@ -26,10 +18,7 @@
           <option v-for="c in couriers" :key="c" :value="c">{{ c }}</option>
         </select>
       </div>
-      <div class="form-item">
-        <label>手机尾号</label>
-        <input v-model="form.phone" type="number" maxlength="4" placeholder="后4位（选填）" />
-      </div>
+      <div class="form-item"><label>手机尾号</label><input v-model="form.phone" type="number" maxlength="4" placeholder="后4位（选填）" /></div>
     </div>
 
     <button class="primary" style="margin-top: 24px" @click="onSave">保存</button>
@@ -72,30 +61,18 @@ function parseText() {
 function onSave() {
   if (!form.value.code) return
   addRecord(form.value.station, form.value.code, form.value.courier, form.value.phone)
-  router.back()
+  router.push('/')
 }
 </script>
 
 <style scoped>
-.add-page { padding: 16px; }
-.section-title { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
-.clipboard-hint {
-  font-size: 12px; color: var(--primary); background: #e8f2fe;
-  border-radius: 8px; padding: 10px; margin-bottom: 8px;
-}
-.smart-input {
-  width: 100%; min-height: 80px; font-size: 14px; padding: 10px;
-  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
-  resize: vertical; font-family: inherit;
-}
-.form { background: #fff; border-radius: 12px; padding: 0 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-.form-item {
-  display: flex; align-items: center; padding: 12px 0;
-  border-bottom: 1px solid var(--border);
-}
+.page-title { font-size: 20px; font-weight: 600; margin-bottom: 16px; color: var(--primary); }
+.section-title { font-size: 16px; font-weight: 600; margin-bottom: 8px; color: var(--text); }
+.clipboard-hint { font-size: 12px; color: var(--primary); background: var(--primary-pale); border-radius: 8px; padding: 10px; margin-bottom: 8px; }
+.smart-input { width: 100%; min-height: 80px; font-size: 14px; padding: 10px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; resize: vertical; font-family: inherit; }
+.form { background: var(--card-bg); border-radius: 12px; padding: 0 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+.form-item { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); }
 .form-item:last-child { border-bottom: none; }
 .form-item label { width: 90px; font-size: 15px; }
-.form-item input, .form-item select {
-  flex: 1; font-size: 14px; border: none; outline: none; background: transparent;
-}
+.form-item input, .form-item select { flex: 1; font-size: 14px; border: none; outline: none; background: transparent; }
 </style>

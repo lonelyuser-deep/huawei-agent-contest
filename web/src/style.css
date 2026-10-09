@@ -1,13 +1,17 @@
 :root {
-  --primary: #4A90D9;
+  --primary: #2D5A27;
+  --primary-light: #3A7D44;
+  --primary-pale: #E8F0E5;
+  --bg: #F5F2E9;
+  --card-bg: #FFFFFF;
+  --nav-bg: #2D5A27;
+  --nav-text: #F5F2E9;
   --picked: #52C41A;
-  --delete: #FF4D4F;
-  --bg: #f5f6fa;
-  --card-bg: #ffffff;
-  --text: #333;
-  --text-secondary: #555;
-  --text-hint: #999;
-  --border: #f0f0f0;
+  --delete: #C0392B;
+  --text: #2C3E50;
+  --text-secondary: #5D6D7E;
+  --text-hint: #95A5A6;
+  --border: #E0DDD4;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -20,10 +24,8 @@ body {
 }
 
 #app {
-  max-width: 480px;
-  margin: 0 auto;
+  display: flex;
   min-height: 100vh;
-  position: relative;
 }
 
 button {
@@ -39,3 +41,5 @@ button.primary { background: var(--primary); color: #fff; width: 100%; border-ra
 button.success { background: var(--picked); color: #fff; width: 100%; border-radius: 12px; }
 button.outline-danger { background: #fff; color: var(--delete); border: 1px solid var(--delete); width: 100%; border-radius: 12px; }
 button.outline-primary { background: #fff; color: var(--primary); border: 1px solid var(--primary); width: 100%; border-radius: 12px; }
+
+a { text-decoration: none; color: inherit; }
