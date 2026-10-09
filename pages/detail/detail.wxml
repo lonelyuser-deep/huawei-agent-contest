@@ -1,0 +1,38 @@
+<view class="container" wx:if="{{record}}">
+  <view class="detail-card">
+    <view class="detail-status {{record.status}}">
+      <text>{{record.status === 'pending' ? '📦 待取件' : '✅ 已取件'}}</text>
+    </view>
+
+    <view class="detail-row">
+      <text class="detail-label">驿站</text>
+      <text class="detail-value">{{record.station || '未填写'}}</text>
+    </view>
+    <view class="detail-row">
+      <text class="detail-label">取件码</text>
+      <text class="detail-value code-value">{{record.code}}</text>
+    </view>
+    <view class="detail-row">
+      <text class="detail-label">快递公司</text>
+      <text class="detail-value">{{record.courier || '未填写'}}</text>
+    </view>
+    <view class="detail-row">
+      <text class="detail-label">手机尾号</text>
+      <text class="detail-value">{{record.phone || '未填写'}}</text>
+    </view>
+    <view class="detail-row">
+      <text class="detail-label">添加时间</text>
+      <text class="detail-value">{{createTime}}</text>
+    </view>
+    <view class="detail-row" wx:if="{{record.pickedAt}}">
+      <text class="detail-label">取件时间</text>
+      <text class="detail-value">{{pickedTime}}</text>
+    </view>
+  </view>
+
+  <view class="actions">
+    <button wx:if="{{record.status === 'pending'}}" class="action-btn pick-btn" bindtap="togglePick">标记已取件</button>
+    <button wx:else class="action-btn cancel-btn" bindtap="togglePick">取消取件标记</button>
+    <button class="action-btn delete-btn" bindtap="onDelete">删除记录</button>
+  </view>
+</view>

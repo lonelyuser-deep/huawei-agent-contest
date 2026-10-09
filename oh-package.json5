@@ -1,0 +1,12 @@
+{
+  "name": "express-helper",
+  "version": "1.0.0",
+  "description": "校园快递助手 - 华为agent参赛项目",
+  "main": "",
+  "author": "",
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {
+    "@ohos/hypium": "1.0.15"
+  }
+}
