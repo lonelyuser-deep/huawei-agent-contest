@@ -1,0 +1,15 @@
+node_modules/
+dist/
+.DS_Store
+*.log
+*.hap
+*.app
+
+harmonyos/.idea/
+harmonyos/build/
+harmonyos/entry/build/
+harmonyos/oh_modules/
+harmonyos/local.properties
+
+web/node_modules/
+web/dist/

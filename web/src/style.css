@@ -1,0 +1,41 @@
+:root {
+  --primary: #4A90D9;
+  --picked: #52C41A;
+  --delete: #FF4D4F;
+  --bg: #f5f6fa;
+  --card-bg: #ffffff;
+  --text: #333;
+  --text-secondary: #555;
+  --text-hint: #999;
+  --border: #f0f0f0;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+#app {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+  position: relative;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  padding: 12px;
+  transition: opacity 0.2s;
+}
+button:active { opacity: 0.8; }
+button.primary { background: var(--primary); color: #fff; width: 100%; border-radius: 12px; }
+button.success { background: var(--picked); color: #fff; width: 100%; border-radius: 12px; }
+button.outline-danger { background: #fff; color: var(--delete); border: 1px solid var(--delete); width: 100%; border-radius: 12px; }
+button.outline-primary { background: #fff; color: var(--primary); border: 1px solid var(--primary); width: 100%; border-radius: 12px; }
