@@ -1,5 +1,13 @@
 <template>
   <div class="home-page">
+    <BudgetWarning
+      v-if="budgetSettings.enabled"
+      :spent="budgetStatus.spent"
+      :budget="budgetStatus.budget"
+      :threshold="budgetStatus.threshold"
+      :status="budgetStatus.status"
+    />
+
     <h1 class="page-title">📊 账单总览</h1>
 
     <div class="stats-row">
@@ -19,6 +27,14 @@
         <span class="stat-value" :class="fairnessClass">{{ avgFairness }}%</span>
       </div>
     </div>
+
+    <BudgetProgress
+      v-if="budgetSettings.enabled"
+      :spent="budgetStatus.spent"
+      :budget="budgetStatus.budget"
+    />
+
+    <SavingTipsCard :bills="bills" :roommates="roommates" />
 
     <div class="category-stats">
       <div v-for="cat in categoryStats" :key="cat.category" class="cat-item">
@@ -50,15 +66,30 @@
 import { computed, ref, onMounted } from 'vue'
 import type { Bill, BillCategory } from '@/types/bill'
 import { CATEGORY_LABELS, CATEGORY_ICONS } from '@/types/bill'
+import type { Roommate } from '@/types/roommate'
+import type { BudgetStatusInfo } from '@/types/budget'
 import { loadBills, loadRoommates, formatAmount, calculateFairness } from '@/utils/storage'
+import { loadBudgetSettings, getBudgetStatus } from '@/api/budgetApi'
 import BillCard from '@/components/BillCard.vue'
+import BudgetWarning from '@/components/BudgetWarning.vue'
+import BudgetProgress from '@/components/BudgetProgress.vue'
+import SavingTipsCard from '@/components/SavingTipsCard.vue'
 
 const bills = ref<Bill[]>([])
+const roommates = ref<Roommate[]>([])
+const budgetSettings = ref(loadBudgetSettings())
+const budgetStatus = ref<BudgetStatusInfo>({
+  spent: 0, budget: 0, ratio: 0, status: 'normal', remaining: 0, threshold: 80
+})
 
-onMounted(() => { bills.value = loadBills() })
+onMounted(() => {
+  bills.value = loadBills()
+  roommates.value = loadRoommates()
+  budgetSettings.value = loadBudgetSettings()
+  budgetStatus.value = getBudgetStatus(bills.value)
+})
 
 const totalAmount = computed(() => bills.value.reduce((s, b) => s + b.amount, 0))
-
 const sortedBills = computed(() => [...bills.value].sort((a, b) => b.createdAt - a.createdAt))
 
 const categoryStats = computed(() => {
@@ -72,7 +103,7 @@ const categoryStats = computed(() => {
   return Array.from(map.entries()).map(([category, v]) => ({ category, ...v }))
 })
 
-const fairnessScores = computed(() => calculateFairness(bills.value, loadRoommates()))
+const fairnessScores = computed(() => calculateFairness(bills.value, roommates.value))
 const avgFairness = computed(() => {
   if (fairnessScores.value.length === 0) return 100
   return Math.round(fairnessScores.value.reduce((s, f) => s + f.fairness, 0) / fairnessScores.value.length)
