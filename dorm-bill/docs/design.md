@@ -1,8 +1,8 @@
 # 宿舍账单管家 - 技术设计文档 (TDD)
 
-> 版本: 1.1.0  
+> 版本: 1.2.0  
 > 更新日期: 2026-10-10  
-> 变更: 新增预算预警和省钱建议功能的技术设计
+> 变更: 整合「智能攒钱小助手」——储蓄目标 + 进度可视化 + 省钱联动
 
 ---
 
@@ -13,8 +13,8 @@
 │                   前端 (Vue3 + TS)               │
 │                                                   │
 │  ┌──────────┐ ┌──────────┐ ┌──────────────────┐ │
-│  │ 账单管理  │ │ 预算预警  │ │  省钱建议卡片    │ │
-│  │ (已有)    │ │ (新增)   │ │  (新增)         │ │
+│  │ 账单管理  │ │ 预算预警  │ │  智能攒钱小助手  │ │
+│  │ (已有)    │ │ (已有)   │ │  (新增·核心)    │ │
 │  └──────────┘ └──────────┘ └──────────────────┘ │
 │        │            │              │              │
 │  ┌─────┴────────────┴──────────────┴──────────┐  │
@@ -24,13 +24,15 @@
 │        │            │              │              │
 │  ┌─────┴────────────┴──────────────┴──────────┐  │
 │  │              API Service Layer              │  │
-│  │  budgetApi   suggestionApi   ocrApi  nlpApi │  │
+│  │  budgetApi   suggestionApi   savingsApi      │  │
+│  │  ocrApi  nlpApi                              │  │
 │  └────────────────────────────────────────────┘  │
 └─────────────────────────────────────────────────┘
                          │
 ┌────────────────────────┴────────────────────────┐
 │              数据层 (localStorage / 后端)        │
-│  bills  roommates  budget_settings  suggestions  │
+│  bills  roommates  budget_settings  savings_goals │
+│  suggestions  savings_records                     │
 └─────────────────────────────────────────────────┘
 ```
 
@@ -90,6 +92,40 @@ interface SuggestionFeedback {
 ```
 
 存储 key: `dorm_suggestion_feedback`
+
+#### savings_goals（储蓄目标）
+
+```typescript
+interface SavingsGoal {
+  id: string
+  goalName: string             // 目标名称，如"买电脑"
+  targetAmount: number         // 目标金额
+  currentAmount: number        // 已存金额
+  deadline: string             // 截止日期 YYYY-MM-DD
+  isActive: boolean            // 是否当前活跃目标
+  status: 'active' | 'completed' | 'archived'
+  createdAt: number
+  updatedAt: number
+}
+```
+
+存储 key: `dorm_savings_goals`
+
+#### savings_records（储蓄记录）
+
+```typescript
+interface SavingsRecord {
+  id: string
+  goalId: string               // 关联目标 ID
+  amount: number               // 存入金额
+  source: 'budget_surplus' | 'suggestion_adopted' | 'category_reduction' | 'manual'
+  description: string          // 描述
+  month: string                // YYYY-MM
+  createdAt: number
+}
+```
+
+存储 key: `dorm_savings_records`
 
 ---
 
@@ -153,6 +189,47 @@ interface SuggestionFeedback {
 - `bills: Bill[]` - 账单数据
 - `roommates: Roommate[]`
 
+#### 3.1.4 SmartSavingCard.vue - 智能攒钱小助手卡片 [新增·核心]
+
+```
+┌──────────────────────────────────────────┐
+│ 🐷 智能攒钱小助手                         │
+│                                           │
+│ 🎯 目标：买电脑  ¥1,200 / ¥3,000         │
+│ ┌──────────────────────────────────────┐ │
+│ │ ████████████░░░░░░░░░░░░░░░░░░░░░░  │ │
+│ └──────────────────────────────────────┘ │
+│ 进度 40%    剩余 ¥1,800    截止 2026-12-31│
+│                                           │
+│ ── 联动消息 ──────────────────────────── │
+│ 💰 本月结余 ¥230，已加入"买电脑"进度！    │
+│ 🧋 这个月少喝了3杯奶茶，买电脑进度 +¥15！ │
+│                                           │
+│ ── AI 省钱建议 ──────────────────────── │
+│ 🍔 外卖频次过高                           │
+│ 本月外卖 12 次，建议尝试食堂              │
+│ 预计可省 ¥200-400                         │
+│ [采纳建议]  👍 有用  👎 无用              │
+│                                           │
+│ [手动存入]  [切换目标]                    │
+└──────────────────────────────────────────┘
+```
+
+**Props:**
+- `bills: Bill[]` - 账单数据
+- `budgetStatus: BudgetStatusInfo` - 预算状态
+
+**Events:**
+- `goalCompleted` - 目标达成时触发
+- `updated` - 储蓄数据更新时触发
+
+**子组件：**
+- 储蓄目标进度条
+- 联动消息列表
+- 省钱建议列表（复用 SavingTipsCard 逻辑）
+- 手动存入弹窗
+- 目标设定弹窗
+
 ### 3.2 页面修改
 
 #### Home.vue（首页）修改
@@ -165,9 +242,11 @@ interface SuggestionFeedback {
 │  ┌────────┐ ┌────────┐ ┌────────┐       │
 │  │总金额   │ │账单数   │ │公平度   │      │
 │  └────────┘ └────────┘ └────────┘       │
-│  [BudgetProgress]  ← 新增：预算进度条    │
+│  [BudgetProgress]  ← 已有：预算进度条    │
 ├──────────────────────────────────────────┤
-│  [SavingTipsCard]  ← 新增：省钱小助手    │
+│  [SmartSavingCard]  ← 新增：智能攒钱小助手│
+├──────────────────────────────────────────┤
+│  [SavingTipsCard]  ← 已有：省钱小助手    │
 ├──────────────────────────────────────────┤
 │  最近账单                                │
 │  [BillCard] [BillCard] [BillCard] ...    │
@@ -181,6 +260,12 @@ interface SuggestionFeedback {
 - 预警阈值滑块（默认 80%）
 - 按类别预算设置（可折叠）
 - 启用/禁用开关
+
+新增"储蓄目标管理"区块：
+- 当前活跃目标展示
+- 创建新目标（名称、金额、截止日期）
+- 目标列表（切换活跃、删除、查看进度）
+- 储蓄历史记录查看
 
 ---
 
@@ -248,6 +333,83 @@ async function generateAISuggestions(bills: Bill[]): Promise<SavingTip[]>
 // → 后期接入华为云 ModelArts 大模型
 ```
 
+### 4.3 储蓄管理逻辑 (savingsApi.ts) [新增·核心]
+
+```typescript
+// 获取所有储蓄目标
+function getSavingsGoals(): SavingsGoal[]
+
+// 获取当前活跃目标
+function getActiveGoal(): SavingsGoal | null
+
+// 创建储蓄目标
+function createGoal(goal: Omit<SavingsGoal, 'id' | 'currentAmount' | 'createdAt' | 'updatedAt'>): SavingsGoal
+
+// 更新目标
+function updateGoal(id: string, updates: Partial<SavingsGoal>): void
+
+// 删除目标
+function deleteGoal(id: string): void
+
+// 手动存入
+function deposit(goalId: string, amount: number, description?: string): SavingsRecord
+
+// 计算本月预算结余并自动存入（核心联动）
+function applyBudgetSurplus(bills: Bill[], budget: number, goalId: string): {
+  surplus: number           // 结余金额
+  record: SavingsRecord | null
+  message: string           // 联动提示消息
+}
+
+// 采纳省钱建议，将预计可省金额存入（核心联动）
+function adoptSuggestion(goalId: string, tip: SavingTip): {
+  amount: number            // 实际存入金额（预计可省的 50%）
+  record: SavingsRecord
+  message: string           // 联动提示消息
+}
+
+// 检测特定类别消费减少并自动存入（核心联动）
+function checkCategoryReduction(bills: Bill[], goalId: string): {
+  reductions: Array<{
+    category: BillCategory
+    savedAmount: number
+    message: string         // 如"少喝了3杯奶茶，进度+¥15"
+  }>
+}
+
+// 获取储蓄历史记录
+function getSavingsRecords(goalId?: string): SavingsRecord[]
+
+// 检查目标是否达成
+function checkGoalCompletion(goal: SavingsGoal): boolean
+```
+
+### 4.4 联动逻辑流程图
+
+```
+用户添加账单 → 计算本月消费
+       │
+       ├─ 消费 < 预算？
+       │    └─ 是 → applyBudgetSurplus()
+       │         → 结余自动存入活跃目标
+       │         → 生成联动消息
+       │
+       ├─ 用户采纳省钱建议？
+       │    └─ 是 → adoptSuggestion()
+       │         → 预计可省 × 50% 存入目标
+       │         → 生成联动消息
+       │
+       └─ 检测类别消费减少？
+            └─ 是 → checkCategoryReduction()
+                 → 差额按比例存入目标
+                 → 生成联动消息
+       │
+       ▼
+检查目标是否达成 → checkGoalCompletion()
+       │
+       └─ 达成 → 触发祝贺弹窗
+```
+
 ### 4.3 规则引擎详细设计
 
 | 规则 ID | 触发条件 | 建议标题 | 建议内容 | 预计可省 |
@@ -268,16 +430,19 @@ async function generateAISuggestions(bills: Bill[]): Promise<SavingTip[]>
 |---------|------|
 | `src/types/budget.ts` | 预算相关类型定义 |
 | `src/types/suggestion.ts` | 省钱建议类型定义 |
+| `src/types/savings.ts` | 储蓄目标类型定义 |
 | `src/api/budgetApi.ts` | 预算管理 API |
 | `src/api/suggestionApi.ts` | 省钱建议引擎 |
+| `src/api/savingsApi.ts` | 储蓄管理 + 联动逻辑 API |
 | `src/components/BudgetWarning.vue` | 预算警告条组件 |
 | `src/components/BudgetProgress.vue` | 预算进度条组件 |
 | `src/components/SavingTipsCard.vue` | 省钱小助手卡片组件 |
+| `src/components/SmartSavingCard.vue` | 智能攒钱小助手卡片（核心） |
 
 ### 5.2 修改文件
 
 | 文件路径 | 修改内容 |
 |---------|---------|
-| `src/views/Home.vue` | 添加预算警告条、进度条、省钱卡片 |
-| `src/views/Settings.vue` | 添加预算管理设置区块 |
-| `src/utils/storage.ts` | 添加预算数据存取函数 |
+| `src/views/Home.vue` | 添加预算警告条、进度条、省钱卡片、智能攒钱卡片 |
+| `src/views/Settings.vue` | 添加预算管理 + 储蓄目标管理区块 |
+| `src/utils/storage.ts` | 添加预算、储蓄数据存取函数 |
