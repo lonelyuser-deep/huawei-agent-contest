@@ -11,7 +11,7 @@
         </svg>
       </div>
       <div class="brand-text">
-        <span class="brand-name">校园快递助手</span>
+        <span class="brand-name">智云校遇</span>
         <span class="brand-tag">CAMPUS DELIVERY</span>
       </div>
     </div>

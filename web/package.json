@@ -1,7 +1,7 @@
 {
   "name": "express-helper-web",
   "version": "1.0.0",
-  "description": "校园快递助手 - Web版",
+  "description": "智云校遇 - Web版",
   "private": true,
   "type": "module",
   "scripts": {

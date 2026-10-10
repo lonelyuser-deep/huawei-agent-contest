@@ -84,7 +84,7 @@
 
     <div class="cover-content" :class="{ leaving: isLeaving }">
       <div class="cover-tag">CAMPUS DELIVERY</div>
-      <h1 class="cover-title">校园快递助手</h1>
+      <h1 class="cover-title">智云校遇</h1>
       <p class="cover-subtitle">让每一件快递，都有清晰的去向</p>
       <button class="enter-btn" @click="handleEnter" :class="{ glowing: isLeaving }">
         <span class="enter-btn-text">进入助手</span>

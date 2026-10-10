@@ -35,7 +35,7 @@
 
     <div class="section-card fade-in-up" style="animation-delay:0.15s">
       <div class="section-card-title">关于</div>
-      <div class="info-row"><span class="i-label">应用名称</span><span class="i-value">校园快递助手</span></div>
+      <div class="info-row"><span class="i-label">应用名称</span><span class="i-value">智云校遇</span></div>
       <div class="info-row"><span class="i-label">版本</span><span class="i-value">v2.0 自然校园版</span></div>
       <div class="info-row"><span class="i-label">技术栈</span><span class="i-value">Vue3 + Vite5 + TS</span></div>
       <div class="info-row"><span class="i-label">适配平台</span><span class="i-value">HarmonyOS / Web</span></div>
