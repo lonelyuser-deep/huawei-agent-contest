@@ -13,3 +13,5 @@ harmonyos/local.properties
 
 web/node_modules/
 web/dist/
+
+.codeartsdoer/
