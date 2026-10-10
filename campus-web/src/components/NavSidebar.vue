@@ -4,15 +4,13 @@
     <div class="brand">
       <div class="brand-icon">
         <svg viewBox="0 0 24 24" fill="none" width="22" height="22">
-          <rect x="3" y="8" width="18" height="13" rx="2" stroke="currentColor" stroke-width="1.8" />
-          <path d="M3 8L12 3L21 8" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" />
-          <rect x="10" y="13" width="4" height="4" rx="0.5" fill="currentColor" opacity="0.4" />
-          <path d="M8 8V6M16 8V6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+          <path d="M12 3L4 7V13C4 17 7 20 12 21C17 20 20 17 20 13V7L12 3Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+          <path d="M9 12L11 14L15 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </div>
       <div class="brand-text">
-        <span class="brand-name">校园快递助手</span>
-        <span class="brand-tag">CAMPUS DELIVERY</span>
+        <span class="brand-name">校园生活助手</span>
+        <span class="brand-tag">CAMPUS LIFE</span>
       </div>
     </div>
 
@@ -26,33 +24,31 @@
     </ul>
 
     <div class="sidebar-footer">
-      <div class="pending-badge" v-if="pendingCount > 0">
-        <span class="badge-num">{{ pendingCount }}</span>
-        <span class="badge-text">件待取</span>
+      <div class="pending-badge" v-if="todayCourseCount > 0">
+        <span class="badge-num">{{ todayCourseCount }}</span>
+        <span class="badge-text">节今日课程</span>
       </div>
       <div class="pending-badge empty" v-else>
-        <span class="badge-text">暂无待取快递</span>
+        <span class="badge-text">今日无课</span>
       </div>
-      <div class="version">v2.0 · 自然校园版</div>
+      <div class="version">v1.0 · 校园生活版</div>
     </div>
   </nav>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
-import { getStats } from '@/utils/storage'
+import { getScheduleStats } from '@/utils/scheduleStorage'
 
-const pendingCount = ref(0)
+const todayCourseCount = ref(0)
 
 const navItems = [
-  { path: '/', icon: '<svg viewBox="0 0 20 20" fill="none" width="18" height="18"><rect x="2" y="3" width="16" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M2 7H18" stroke="currentColor" stroke-width="1.5"/><path d="M6 3V7M14 3V7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>', label: '快递看板' },
-  { path: '/add', icon: '<svg viewBox="0 0 20 20" fill="none" width="18" height="18"><circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.5"/><path d="M10 6V14M6 10H14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>', label: '添加快递' },
+  { path: '/', icon: '<svg viewBox="0 0 20 20" fill="none" width="18" height="18"><path d="M3 10L10 3L17 10V16C17 16.5 16.5 17 16 17H12V12H8V17H4C3.5 17 3 16.5 3 16V10Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>', label: '生活首页' },
   { path: '/schedule', icon: '<svg viewBox="0 0 20 20" fill="none" width="18" height="18"><rect x="3" y="4" width="14" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M3 8H17" stroke="currentColor" stroke-width="1.5"/><path d="M7 4V2M13 4V2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M7 12H9M11 12H13M7 15H9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>', label: '课程表' },
-  { path: '/reminder', icon: '<svg viewBox="0 0 20 20" fill="none" width="18" height="18"><path d="M10 2C6.5 2 4 4.5 4 8V12L2 15H18L16 12V8C16 4.5 13.5 2 10 2Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M8 17C8 18 9 19 10 19C11 19 12 18 12 17" stroke="currentColor" stroke-width="1.5"/></svg>', label: '取件提醒' },
   { path: '/settings', icon: '<svg viewBox="0 0 20 20" fill="none" width="18" height="18"><circle cx="10" cy="10" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M10 2V4M10 16V18M2 10H4M16 10H18M4.5 4.5L5.8 5.8M14.2 14.2L15.5 15.5M4.5 15.5L5.8 14.2M14.2 5.8L15.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>', label: '设置' }
 ]
 
-function updateCount() { pendingCount.value = getStats().pending }
+function updateCount() { todayCourseCount.value = getScheduleStats().today }
 
 onMounted(() => {
   updateCount()

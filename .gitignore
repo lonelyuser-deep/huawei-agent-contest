@@ -13,3 +13,7 @@ harmonyos/local.properties
 
 web/node_modules/
 web/dist/
+campus-web/node_modules/
+campus-web/dist/
+
+.arts/
