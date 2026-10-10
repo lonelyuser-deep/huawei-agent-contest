@@ -16,14 +16,19 @@
       </div>
     </div>
 
-    <ul class="nav-list">
-      <li v-for="item in navItems" :key="item.path">
-        <router-link :to="item.path" class="nav-link" active-class="active" exact>
-          <span class="nav-icon" v-html="item.icon"></span>
-          <span class="nav-label">{{ item.label }}</span>
-        </router-link>
-      </li>
-    </ul>
+    <div class="nav-list">
+      <div v-for="group in navGroups" :key="group.title" class="nav-group">
+        <div class="nav-group-title">{{ group.title }}</div>
+        <ul class="nav-group-list">
+          <li v-for="item in group.items" :key="item.path">
+            <router-link :to="item.path" class="nav-link" active-class="active" exact>
+              <span class="nav-icon" v-html="item.icon"></span>
+              <span class="nav-label">{{ item.label }}</span>
+            </router-link>
+          </li>
+        </ul>
+      </div>
+    </div>
 
     <div class="sidebar-footer">
       <div class="pending-badge" v-if="pendingCount > 0">
@@ -44,12 +49,27 @@ import { getStats } from '@/utils/storage'
 
 const pendingCount = ref(0)
 
-const navItems = [
-  { path: '/', icon: '<svg viewBox="0 0 20 20" fill="none" width="18" height="18"><rect x="2" y="3" width="16" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M2 7H18" stroke="currentColor" stroke-width="1.5"/><path d="M6 3V7M14 3V7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>', label: '快递看板' },
-  { path: '/add', icon: '<svg viewBox="0 0 20 20" fill="none" width="18" height="18"><circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.5"/><path d="M10 6V14M6 10H14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>', label: '添加快递' },
-  { path: '/reminder', icon: '<svg viewBox="0 0 20 20" fill="none" width="18" height="18"><path d="M10 2C6.5 2 4 4.5 4 8V12L2 15H18L16 12V8C16 4.5 13.5 2 10 2Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M8 17C8 18 9 19 10 19C11 19 12 18 12 17" stroke="currentColor" stroke-width="1.5"/></svg>', label: '取件提醒' },
-  { path: '/settings', icon: '<svg viewBox="0 0 20 20" fill="none" width="18" height="18"><circle cx="10" cy="10" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M10 2V4M10 16V18M2 10H4M16 10H18M4.5 4.5L5.8 5.8M14.2 14.2L15.5 15.5M4.5 15.5L5.8 14.2M14.2 5.8L15.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>', label: '设置' },
-  { path: '/forum', icon: '<svg viewBox="0 0 20 20" fill="none" width="18" height="18"><path d="M3 5C3 4 4 3 5 3H15C16 3 17 4 17 5V11C17 12 16 13 15 13H8L4 16V13H5C4 13 3 12 3 11V5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>', label: '校园论坛' }
+const navGroups = [
+  {
+    title: '快递服务',
+    items: [
+      { path: '/', icon: '<svg viewBox="0 0 20 20" fill="none" width="18" height="18"><rect x="2" y="3" width="16" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M2 7H18" stroke="currentColor" stroke-width="1.5"/><path d="M6 3V7M14 3V7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>', label: '快递看板' },
+      { path: '/add', icon: '<svg viewBox="0 0 20 20" fill="none" width="18" height="18"><circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.5"/><path d="M10 6V14M6 10H14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>', label: '添加快递' },
+      { path: '/reminder', icon: '<svg viewBox="0 0 20 20" fill="none" width="18" height="18"><path d="M10 2C6.5 2 4 4.5 4 8V12L2 15H18L16 12V8C16 4.5 13.5 2 10 2Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M8 17C8 18 9 19 10 19C11 19 12 18 12 17" stroke="currentColor" stroke-width="1.5"/></svg>', label: '取件提醒' }
+    ]
+  },
+  {
+    title: '校园论坛',
+    items: [
+      { path: '/forum', icon: '<svg viewBox="0 0 20 20" fill="none" width="18" height="18"><path d="M3 5C3 4 4 3 5 3H15C16 3 17 4 17 5V11C17 12 16 13 15 13H8L4 16V13H5C4 13 3 12 3 11V5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>', label: '论坛首页' }
+    ]
+  },
+  {
+    title: '系统',
+    items: [
+      { path: '/settings', icon: '<svg viewBox="0 0 20 20" fill="none" width="18" height="18"><circle cx="10" cy="10" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M10 2V4M10 16V18M2 10H4M16 10H18M4.5 4.5L5.8 5.8M14.2 14.2L15.5 15.5M4.5 15.5L5.8 14.2M14.2 5.8L15.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>', label: '设置' }
+    ]
+  }
 ]
 
 function updateCount() { pendingCount.value = getStats().pending }
@@ -108,13 +128,25 @@ onUnmounted(() => { window.removeEventListener('storage-updated', updateCount) }
 .brand-tag { font-size: 10px; letter-spacing: 2px; opacity: 0.5; font-family: var(--font-mono); }
 .nav-list {
   list-style: none;
-  padding: 20px 16px;
+  padding: 16px 16px;
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 16px;
   position: relative;
+  overflow-y: auto;
 }
+.nav-group { display: flex; flex-direction: column; gap: 4px; }
+.nav-group-title {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  opacity: 0.4;
+  padding: 4px 16px 6px;
+  text-transform: uppercase;
+  font-family: var(--font-mono);
+}
+.nav-group-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
 .nav-link {
   display: flex;
   align-items: center;
