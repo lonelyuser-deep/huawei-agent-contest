@@ -32,6 +32,7 @@
       v-if="budgetSettings.enabled"
       :spent="budgetStatus.spent"
       :budget="budgetStatus.budget"
+      @updated="refreshBudget"
     />
 
     <SavingTipsCard :bills="bills" :roommates="roommates" />
@@ -109,6 +110,11 @@ const avgFairness = computed(() => {
   return Math.round(fairnessScores.value.reduce((s, f) => s + f.fairness, 0) / fairnessScores.value.length)
 })
 const fairnessClass = computed(() => avgFairness.value >= 80 ? 'good' : avgFairness.value >= 50 ? 'ok' : 'bad')
+
+function refreshBudget() {
+  budgetSettings.value = loadBudgetSettings()
+  budgetStatus.value = getBudgetStatus(bills.value)
+}
 </script>
 
 <style scoped>
