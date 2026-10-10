@@ -12,6 +12,7 @@ const navItems = [
   { path: '/', icon: '<svg viewBox="0 0 20 20" fill="none" width="20" height="20"><rect x="2" y="3" width="16" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M2 7H18" stroke="currentColor" stroke-width="1.5"/></svg>', label: '看板' },
   { path: '/add', icon: '<svg viewBox="0 0 20 20" fill="none" width="20" height="20"><circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.5"/><path d="M10 6V14M6 10H14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>', label: '添加' },
   { path: '/reminder', icon: '<svg viewBox="0 0 20 20" fill="none" width="20" height="20"><path d="M10 2C6.5 2 4 4.5 4 8V12L2 15H18L16 12V8C16 4.5 13.5 2 10 2Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>', label: '提醒' },
+  { path: '/forum', icon: '<svg viewBox="0 0 20 20" fill="none" width="20" height="20"><path d="M3 5C3 4 4 3 5 3H15C16 3 17 4 17 5V11C17 12 16 13 15 13H8L4 16V13H5C4 13 3 12 3 11V5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>', label: '论坛' },
   { path: '/settings', icon: '<svg viewBox="0 0 20 20" fill="none" width="20" height="20"><circle cx="10" cy="10" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M10 2V4M10 16V18M2 10H4M16 10H18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>', label: '设置' }
 ]
 </script>
