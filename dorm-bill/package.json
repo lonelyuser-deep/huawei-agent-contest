@@ -1,0 +1,22 @@
+{
+  "name": "dorm-bill-helper",
+  "version": "1.0.0",
+  "description": "宿舍账单管家 - 大学生宿舍生活账单管理与分摊",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "vue": "^3.4.0",
+    "vue-router": "^4.3.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.0",
+    "typescript": "^5.4.0",
+    "vite": "^8.3.4",
+    "vue-tsc": "^3.3.12"
+  }
+}
